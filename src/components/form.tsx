@@ -1,5 +1,5 @@
 // Компоненти для форм: поле вводу, радіо-рядок, шапка кроку.
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Animated, Easing, KeyboardTypeOptions, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadow, spacing, type } from '../theme';
@@ -97,7 +97,7 @@ export function Question({ children, hint }: { children: string; hint?: string }
 
 // Крапки завантаження (для «перевіряємо…»)
 export function Spinner({ color = colors.primary }: { color?: string }) {
-  const v = useRef(new Animated.Value(0)).current;
+  const [v] = useState(() => new Animated.Value(0));
   React.useEffect(() => {
     Animated.loop(Animated.timing(v, { toValue: 1, duration: 900, easing: Easing.linear, useNativeDriver: true })).start();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

@@ -33,7 +33,6 @@ export function Register({ onDone, onClose, reason }: { onDone: () => void; onCl
   // таймер «надіслати ще раз»
   useEffect(() => {
     if (step !== 'code') return;
-    setLeft(30);
     const t = setInterval(() => setLeft((x) => (x > 0 ? x - 1 : 0)), 1000);
     return () => clearInterval(t);
   }, [step]);
@@ -106,7 +105,7 @@ export function Register({ onDone, onClose, reason }: { onDone: () => void; onCl
               {isEmail && mode === 'signup' && <TextField label="Пароль" value={password} onChangeText={setPassword} placeholder="Не менше 4 символів" icon="lock-closed-outline" secure />}
             </View>
             <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-              <PrimaryButton title="Продовжити" disabled={!formOk} onPress={() => setStep('code')} />
+              <PrimaryButton title="Продовжити" disabled={!formOk} onPress={() => { setLeft(30); setStep('code'); }} />
             </View>
           </FadeIn>
         )}

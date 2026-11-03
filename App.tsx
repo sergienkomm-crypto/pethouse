@@ -46,7 +46,7 @@ export default function App() {
 
 // Тост, що м’яко з’являється й зникає
 function Toast({ text, bottom }: { text: string; bottom: number }) {
-  const v = useRef(new Animated.Value(0)).current;
+  const [v] = useState(() => new Animated.Value(0));
   useEffect(() => {
     Animated.sequence([
       Animated.timing(v, { toValue: 1, duration: 220, easing: Easing.out(Easing.cubic), useNativeDriver: true }),

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radius, spacing, SCREEN_PADDING } from '../theme';
@@ -26,11 +26,11 @@ export function Apply({ petId, onBack, onSubmit }: { petId: string; onBack: () =
   const set = <K extends keyof ApplicationForm>(k: K, v: ApplicationForm[K]) => setF((c) => ({ ...c, [k]: v }));
 
   // найближчі 6 днів для вибору дати
-  const days = useMemo(() => {
+  const [days] = useState(() => {
     const out: string[] = [];
     for (let i = 1; i <= 6; i++) { const d = new Date(Date.now() + i * 86400000); out.push(`${UA_DAYS[d.getDay()]}, ${d.getDate()} ${UA_MONTHS[d.getMonth()]}`); }
     return out;
-  }, []);
+  });
 
   const ok1 = f.name.trim().length > 1 && f.phone.replace(/\D/g, '').length >= 9;
   const ok3 = !!f.day && !!f.time;

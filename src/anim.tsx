@@ -1,5 +1,5 @@
 // Легкі анімації на стандартному Animated (без додаткових бібліотек).
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, PressableProps, StyleProp, Text, View, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from './theme';
@@ -8,7 +8,7 @@ const APressable = Animated.createAnimatedComponent(Pressable);
 
 // Кнопка, яка трохи «втискається» під пальцем
 export function Tap({ style, scaleTo = 0.96, onPressIn, onPressOut, children, ...rest }: Omit<PressableProps, 'style'> & { style?: StyleProp<ViewStyle>; scaleTo?: number }) {
-  const v = useRef(new Animated.Value(1)).current;
+  const [v] = useState(() => new Animated.Value(1));
   const to = (x: number) => Animated.spring(v, { toValue: x, useNativeDriver: true, speed: 50, bounciness: 7 }).start();
   return (
     <APressable
@@ -24,7 +24,7 @@ export function Tap({ style, scaleTo = 0.96, onPressIn, onPressOut, children, ..
 
 // М’яка поява знизу (з відступом у часі для каскаду)
 export function FadeIn({ children, delay = 0, y = 14, duration = 380, style }: { children: React.ReactNode; delay?: number; y?: number; duration?: number; style?: StyleProp<ViewStyle> }) {
-  const v = useRef(new Animated.Value(0)).current;
+  const [v] = useState(() => new Animated.Value(0));
   useEffect(() => {
     Animated.timing(v, { toValue: 1, duration, delay, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -37,7 +37,7 @@ export function FadeIn({ children, delay = 0, y = 14, duration = 380, style }: {
 
 // Перехід між екранами: виїзд справа + проявлення
 export function ScreenTransition({ children, from = 'right' }: { children: React.ReactNode; from?: 'right' | 'fade' }) {
-  const v = useRef(new Animated.Value(0)).current;
+  const [v] = useState(() => new Animated.Value(0));
   useEffect(() => {
     Animated.timing(v, { toValue: 1, duration: 260, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -50,7 +50,7 @@ export function ScreenTransition({ children, from = 'right' }: { children: React
 
 // «Поп» (збільшення й повернення) — для серця в обраному та галочок
 export function usePop(trigger: unknown, skipFirst = true) {
-  const v = useRef(new Animated.Value(1)).current;
+  const [v] = useState(() => new Animated.Value(1));
   const first = useRef(true);
   useEffect(() => {
     if (first.current && skipFirst) { first.current = false; return; }
@@ -66,8 +66,8 @@ export function usePop(trigger: unknown, skipFirst = true) {
 // Святкова анімація успіху: галочка вискакує, хвилі розходяться, смайлики летять угору
 const bursts = ['💛', '🐾', '💚', '✨', '🐾', '💛', '✨', '🐾'];
 export function SuccessBurst({ size = 120, icon = 'checkmark' }: { size?: number; icon?: React.ComponentProps<typeof Ionicons>['name'] }) {
-  const pop = useRef(new Animated.Value(0)).current;
-  const ring = useRef(new Animated.Value(0)).current;
+  const [pop] = useState(() => new Animated.Value(0));
+  const [ring] = useState(() => new Animated.Value(0));
   const fly = useMemo(() => bursts.map(() => new Animated.Value(0)), []);
   useEffect(() => {
     Animated.sequence([
@@ -124,7 +124,7 @@ export function SuccessBurst({ size = 120, icon = 'checkmark' }: { size?: number
 
 // Прогрес-смужка, що плавно заповнюється
 export function ProgressBar({ step, total }: { step: number; total: number }) {
-  const v = useRef(new Animated.Value(step / total)).current;
+  const [v] = useState(() => new Animated.Value(step / total));
   useEffect(() => {
     Animated.timing(v, { toValue: step / total, duration: 320, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
   }, [step, total]); // eslint-disable-line react-hooks/exhaustive-deps
